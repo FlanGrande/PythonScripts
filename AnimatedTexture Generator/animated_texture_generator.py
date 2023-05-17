@@ -1,8 +1,8 @@
 from PIL import Image, ImageFilter 
 
-frames = 60
+frames = 33
 fps = 60.0
-texture_path = "res://textures/environment/key/"
+texture_path = "res://textures/environment/fountain/"
 output = "./output/AT_.tres"
 text = ""
 
@@ -16,9 +16,9 @@ text += "frames = " + str(frames) + "\n"
 text += "fps = " + str(fps) + "\n"
 
 for x in range(1, frames + 1):
-	text += 'frame_' + str(x - 1) + '/texture = ExtResource( ' + str(x) + ' )]\n'
+	text += 'frame_' + str(x - initial_frame) + '/texture = ExtResource( ' + str(x) + ' )]\n'
 	if(x -1 > 0):
-		text += 'frame_' + str(x - 1) + '/delay_sec = 0.0\n'
+		text += 'frame_' + str(x - initial_frame) + '/delay_sec = 0.0\n'
 
 OutputFile = open(output, "w")
 OutputFile.write(text)

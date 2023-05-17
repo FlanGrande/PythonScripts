@@ -1,13 +1,13 @@
 from PIL import Image, ImageFilter 
 
 playback_speed = 0.0
-frames = 64
+frames = 128
 length = 1.0
 fps = 60.0
+h_frames = 8
 v_frames = 16
-h_frames = 4
-texture_path = "res://textures/hazards/car1/"
-output = "./output/AnimationPlayer_.tres"
+texture_path = "res://textures/characters/hewie/"
+output = "./output/AnimationPlayer_Robot.tres"
 starting_resource_id = 100
 next_resource_id = starting_resource_id
 
