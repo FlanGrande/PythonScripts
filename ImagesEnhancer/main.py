@@ -50,7 +50,7 @@ for file in files:
     #im2 = im2.balanceWhite(im2)
     
     # Enhance the image
-    im2 = cv2.detailEnhance(im2, sigma_s=5, sigma_r=0.1)
+    im2 = cv2.detailEnhance(im2, sigma_s=5, sigma_r=0.05)
     denoise_factor = 0.1;
     denoise_amount_base = cv2.Laplacian(image, cv2.CV_64F).var()
     print(f"Denoise amount before clip: {denoise_amount_base}")
@@ -61,7 +61,7 @@ for file in files:
     if denoise_amount_base > 200: 
         im2 = cv2.bilateralFilter(im2, 9, 75, 75)
     
-    im2 = cv2.fastNlMeansDenoisingColored(im2, None, 10, denoise_amount_clipped, 7, 21)
+    im2 = cv2.fastNlMeansDenoisingColored(im2, None, denoise_amount_clipped, denoise_amount_clipped, 7, 21)
 
     # Measure time it takes
     end = cv2.getTickCount()
