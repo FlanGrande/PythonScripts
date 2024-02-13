@@ -16,6 +16,9 @@
 *.manifest
 *.pyz
 *.MP4
+*.exe
 *.spec
 *.psd
 *.ico
+*.webp
+*.gif

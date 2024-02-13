@@ -1,0 +1,13 @@
+{
+    "shop_id": "shop_id",
+    "api_key": "k6qqoyubyo4mgwlzeawa6ir5",
+    "title": "title",
+    "description": "description",
+    "price": "price",
+    "quantity": 1,
+    "personalization": "personalization",
+    "category": "category",
+    "tags": ["tag1", "tag2". "tag3", "tag4", "tag5", "tag6", "tag7", "tag8", "tag9", "tag10", "tag11", "tag12", "tag13"],
+    "materials": ["material1", "material2", "material3", "material4", "material5", "material6", "material7", "material8", "material9", "material10", "material11", "material12", "material13"],
+    "shop_section_id": "shop_section_id"
+}
