@@ -12,8 +12,8 @@ import ffmpeg
 
 # Define the arguments
 parser = argparse.ArgumentParser(description='Convert audio files from one format to another')
-parser.add_argument('-i', '--input', help='Input folder', default='input')
-parser.add_argument('-o', '--output', help='Output folder', default='output')
+parser.add_argument('-i', '--input', help='Input folder', default='./input')
+parser.add_argument('-o', '--output', help='Output folder', default='./output')
 parser.add_argument('-if', '--input_format', help='Input format', default='mkv')
 parser.add_argument('-of', '--output_format', help='Output format', default='mp4')
 args = parser.parse_args()
