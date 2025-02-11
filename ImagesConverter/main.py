@@ -11,6 +11,7 @@ parser.add_argument("-i", "--input-folder", help="Input folder", default="input"
 parser.add_argument("-o", "--output-folder", help="Output folder", default="output")
 parser.add_argument("-s", "--source-format", help="Source format", default="png")
 parser.add_argument("-f", "--output-format", help="Output format", default="jpeg")
+parser.add_argument("-R", "--resize-width", help="Resizes to given width, respecting aspect ratio", default="1920")
 
 
 args = parser.parse_args()
@@ -18,6 +19,7 @@ input_folder = args.input_folder
 output_folder = args.output_folder
 source_format = args.source_format
 output_format = args.output_format
+resize_width = int(args.resize_width)
 
 def retrieve_images(input_folder):
 	images = []
@@ -39,12 +41,20 @@ def convert_images(images):
 			img = img.convert("RGBA")
 		
 		# while image width is over 2000px, resize image to half
-		while img.width > 2000:
-			img = resize_image_to_half(img)
+		# while img.width > 2000 and reduce_size:
+		# 	img = resize_image_to_half(img)
+
+		if img.width != resize_to_width:
+			img = resize_to_width(img, resize_width)
 		
 		img.save(output_folder + "/" + clean_name + "." + output_format, output_format)
 		#close image
 		img.close()
+
+def resize_to_width(image, width):
+	resizing_factor = image.width / width
+	print(resizing_factor) 
+	return image.resize((int(width), int(image.height / resizing_factor)), Image.Resampling.LANCZOS)
 
 # resize images
 def resize_image_to_half(image):
