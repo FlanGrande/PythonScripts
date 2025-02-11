@@ -11,7 +11,9 @@ parser.add_argument("-i", "--input-folder", help="Input folder", default="input"
 parser.add_argument("-o", "--output-folder", help="Output folder", default="output")
 parser.add_argument("-s", "--source-format", help="Source format", default="png")
 parser.add_argument("-f", "--output-format", help="Output format", default="jpeg")
-parser.add_argument("-R", "--resize-width", help="Resizes to given width, respecting aspect ratio", default="1920")
+parser.add_argument("-R", "--resize-width", help="Resizes to given width, respecting aspect ratio", default=1920)
+parser.add_argument("-L", "--lossless", action="store_true", help="Lossless compression")
+parser.add_argument("-q", "--quality", help="Compression quality, 100 is better quality", default=100)
 
 
 args = parser.parse_args()
@@ -20,6 +22,8 @@ output_folder = args.output_folder
 source_format = args.source_format
 output_format = args.output_format
 resize_width = int(args.resize_width)
+lossless = args.lossless
+quality = args.quality
 
 def retrieve_images(input_folder):
 	images = []
@@ -32,6 +36,7 @@ def retrieve_images(input_folder):
 def convert_images(images):
 	for image in images:
 		clean_name = os.path.splitext(image)[0]
+		print("Processing " + clean_name + "...")
 		img = Image.open(input_folder + "/" + image)
 		# if jpeg, convert to RGB
 		if output_format.lower() == "jpeg":
@@ -47,13 +52,13 @@ def convert_images(images):
 		if img.width != resize_to_width:
 			img = resize_to_width(img, resize_width)
 		
-		img.save(output_folder + "/" + clean_name + "." + output_format, output_format)
+		img.save(output_folder + "/" + clean_name + "." + output_format, output_format, lossless = lossless, method = 3, quality = quality)
 		#close image
 		img.close()
 
 def resize_to_width(image, width):
 	resizing_factor = image.width / width
-	print(resizing_factor) 
+	#print(resizing_factor)
 	return image.resize((int(width), int(image.height / resizing_factor)), Image.Resampling.LANCZOS)
 
 # resize images
