@@ -52,7 +52,7 @@ def convert_images(images):
 		if img.width != resize_to_width:
 			img = resize_to_width(img, resize_width)
 		
-		img.save(output_folder + "/" + clean_name + "." + output_format, output_format, lossless = lossless, method = 3, quality = quality)
+		img.save(output_folder + "/" + clean_name + "." + output_format, output_format, lossless = lossless, method = 4, quality = quality)
 		#close image
 		img.close()
 
