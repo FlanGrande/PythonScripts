@@ -18,8 +18,11 @@ WORKDIR /app
 # Copy application files
 COPY main.py downloader.py youtube_downloader_ui.py /app/
 
+# Copy the branding assets
+COPY FlanYDLogo.ico FlanYDLogo.png /app/
+
 # Copy the PyInstaller spec file
-COPY YouTubeDownloader.spec /app/
+COPY FlanYD.spec /app/
 
 # Build the executable using the spec file
-CMD wine pyinstaller YouTubeDownloader.spec
+CMD wine pyinstaller FlanYD.spec
