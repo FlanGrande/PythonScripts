@@ -1,0 +1,27 @@
+name: Build and Release FlanYD
+
+on:
+  push:
+    tags:
+      - 'flanyd-v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build .exe using Docker
+        run: |
+          mkdir output
+          docker build -t flanyd-builder -f Dockerfile .
+          docker run --rm -v ${{ github.workspace }}/output:/app/dist flanyd-builder
+
+      - name: Upload Release Artifact
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output/FlanYD.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
