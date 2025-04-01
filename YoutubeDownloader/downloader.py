@@ -3,6 +3,7 @@ import sys
 import re
 from urllib.parse import urlparse, parse_qs
 from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QApplication
 from yt_dlp import YoutubeDL
 
 def clean_youtube_url(url):
@@ -56,6 +57,10 @@ class DownloadWorker(QObject):
             with YoutubeDL(ydl_opts) as ydl:
                 # First get info to have the title before download starts
                 info_dict = ydl.extract_info(clean_url, download=False)
+                
+                # Process events after info extraction to keep UI responsive
+                QApplication.processEvents()
+                
                 if self.is_cancelled:
                     self.download_finished.emit(url, False, "Download cancelled")
                     return
@@ -63,9 +68,14 @@ class DownloadWorker(QObject):
                 # Then download
                 ydl.download([clean_url])
                 
+                # Process events after download to keep UI responsive
+                QApplication.processEvents()
+                
             self.download_finished.emit(url, True, f"Successfully downloaded: {info_dict.get('title', url)}")
         
         except Exception as e:
+            # Process events before emitting error to keep UI responsive
+            QApplication.processEvents()
             self.download_finished.emit(url, False, f"Error: {str(e)}")
     
     def _progress_hook(self, d):
@@ -88,6 +98,13 @@ class DownloadWorker(QObject):
                 
             # Emit the progress signal with the URL and progress percentage
             self.progress_changed.emit(d['info_dict']['webpage_url'], progress, d['info_dict'])
+            
+            # Process events to keep UI responsive
+            QApplication.processEvents()
+            
+            # Check again if cancelled after processing events
+            if self.is_cancelled:
+                raise Exception("Download cancelled")
     
     def cancel(self):
         """Cancel the current download."""

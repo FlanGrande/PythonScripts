@@ -109,7 +109,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.current_progress_bar.setRange(0, 100)
         self.current_progress_bar.setValue(0)
         self.current_progress_bar.setTextVisible(True)
-        self.current_progress_bar.setFormat("%p% %v")
+        self.current_progress_bar.setFormat("%p%")
         
         self.current_file_label = QLabel("")
         
