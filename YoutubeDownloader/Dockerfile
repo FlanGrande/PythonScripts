@@ -1,10 +1,11 @@
 FROM tobix/pywine:3.10
 
-# Install required Python packages
+# Install required Python packages for both Windows and Linux
 RUN wine pip install pyqt6 yt-dlp pyinstaller
+RUN pip install pyqt6 yt-dlp pyinstaller
 
-# Download and extract ffmpeg for Windows
-RUN apt-get update && apt-get install -y wget unzip && \
+# Download and extract ffmpeg for Windows and install Linux ffmpeg
+RUN apt-get update && apt-get install -y wget unzip ffmpeg && \
     wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip -O /tmp/ffmpeg.zip && \
     unzip -q /tmp/ffmpeg.zip -d /tmp && \
     mkdir -p /app/ffmpeg && \
@@ -21,8 +22,17 @@ COPY main.py downloader.py youtube_downloader_ui.py /app/
 # Copy the branding assets
 COPY FlanYDLogo.ico FlanYDLogo.png /app/
 
-# Copy the PyInstaller spec file
-COPY FlanYD.spec /app/
+# Copy the PyInstaller spec files
+COPY FlanYD-Win.spec FlanYD-Linux.spec /app/
 
-# Build the executable using the spec file
-CMD wine pyinstaller FlanYD.spec
+# Create a build script
+RUN echo '#!/bin/bash\n\
+echo "Building Windows version..."\n\
+wine pyinstaller FlanYD-Win.spec\n\
+echo "Building Linux version..."\n\
+pyinstaller FlanYD-Linux.spec\n\
+echo "Build complete!"\n\
+' > /app/build.sh && chmod +x /app/build.sh
+
+# Build both Windows and Linux executables
+CMD ["/app/build.sh"]
