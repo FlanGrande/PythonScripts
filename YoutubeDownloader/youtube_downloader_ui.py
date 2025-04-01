@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
+import platform
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QLabel, QLineEdit, QPushButton, QListWidget, QListWidgetItem,
@@ -11,12 +12,22 @@ from PyQt6.QtGui import QIcon, QFont, QPixmap
 
 from downloader import DownloadWorker, clean_youtube_url
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 class YouTubeDownloaderUI(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("FlanYD")
         self.setMinimumSize(600, 500)
-        self.setWindowIcon(QIcon("FlanYDLogo.ico"))
+        self.setWindowIcon(QIcon(resource_path("FlanYDLogo.ico")))
         
         # Initialize variables
         self.url_list = []
@@ -41,7 +52,7 @@ class YouTubeDownloaderUI(QMainWindow):
         
         # Logo
         logo_label = QLabel()
-        logo_pixmap = QPixmap("FlanYDLogo.png")
+        logo_pixmap = QPixmap(resource_path("FlanYDLogo.png"))
         logo_pixmap = logo_pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setFixedSize(48, 48)
