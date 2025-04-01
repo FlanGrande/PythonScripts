@@ -7,15 +7,16 @@ from PyQt6.QtWidgets import (
     QProgressBar, QMessageBox, QFrame, QSizePolicy
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSlot
-from PyQt6.QtGui import QIcon, QFont
+from PyQt6.QtGui import QIcon, QFont, QPixmap
 
 from downloader import DownloadWorker, clean_youtube_url
 
 class YouTubeDownloaderUI(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("YouTube Downloader")
+        self.setWindowTitle("FlanYD")
         self.setMinimumSize(600, 500)
+        self.setWindowIcon(QIcon("FlanYDLogo.ico"))
         
         # Initialize variables
         self.url_list = []
@@ -34,6 +35,35 @@ class YouTubeDownloaderUI(QMainWindow):
         main_layout = QVBoxLayout(central_widget)
         main_layout.setSpacing(10)
         main_layout.setContentsMargins(20, 20, 20, 20)
+        
+        # Add logo and title at the top
+        header_layout = QHBoxLayout()
+        
+        # Logo
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("FlanYDLogo.png")
+        logo_pixmap = logo_pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setFixedSize(48, 48)
+        
+        # Title
+        title_label = QLabel("FlanYD")
+        title_font = QFont()
+        title_font.setPointSize(16)
+        title_font.setBold(True)
+        title_label.setFont(title_font)
+        
+        header_layout.addWidget(logo_label)
+        header_layout.addWidget(title_label)
+        header_layout.addStretch()
+        
+        main_layout.addLayout(header_layout)
+        
+        # Add separator after header
+        header_separator = QFrame()
+        header_separator.setFrameShape(QFrame.Shape.HLine)
+        header_separator.setFrameShadow(QFrame.Shadow.Sunken)
+        main_layout.addWidget(header_separator)
         
         # URL input section
         url_layout = QHBoxLayout()
