@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'flanyd-v*'
+  workflow_dispatch:
 
 jobs:
   build:
