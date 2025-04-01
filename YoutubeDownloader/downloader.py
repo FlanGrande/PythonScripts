@@ -54,8 +54,8 @@ class DownloadWorker(QObject):
                 'quiet': True,  # Suppress console output
             }
             
+            # First get info to have the title before download starts
             with YoutubeDL(ydl_opts) as ydl:
-                # First get info to have the title before download starts
                 info_dict = ydl.extract_info(clean_url, download=False)
                 
                 # Process events after info extraction to keep UI responsive
@@ -65,18 +65,37 @@ class DownloadWorker(QObject):
                     self.download_finished.emit(url, False, "Download cancelled")
                     return
                 
+                # Check if info_dict is valid
+                if not info_dict or 'title' not in info_dict:
+                    self.download_finished.emit(url, False, "Could not retrieve video information")
+                    return
+                
                 # Then download
                 ydl.download([clean_url])
                 
                 # Process events after download to keep UI responsive
                 QApplication.processEvents()
-                
+            
             self.download_finished.emit(url, True, f"Successfully downloaded: {info_dict.get('title', url)}")
         
         except Exception as e:
             # Process events before emitting error to keep UI responsive
             QApplication.processEvents()
-            self.download_finished.emit(url, False, f"Error: {str(e)}")
+            error_message = str(e)
+            
+            # Provide more user-friendly error messages for common errors
+            if "Video unavailable" in error_message:
+                error_message = "Video is unavailable or private"
+            elif "sign in to" in error_message.lower():
+                error_message = "This video requires age verification or sign-in"
+            elif "copyright" in error_message.lower():
+                error_message = "This video has been removed due to copyright issues"
+            elif "not exist" in error_message.lower():
+                error_message = "The video does not exist or has been removed"
+            elif "network" in error_message.lower() or "connection" in error_message.lower():
+                error_message = "Network error - Please check your internet connection"
+                
+            self.download_finished.emit(url, False, f"Error: {error_message}")
     
     def _progress_hook(self, d):
         """Progress hook for yt-dlp to track download progress."""

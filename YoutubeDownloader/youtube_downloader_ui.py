@@ -292,6 +292,13 @@ class YouTubeDownloaderUI(QMainWindow):
         # Update status
         self.statusBar().showMessage(message)
         
+        # Show error message if download failed
+        if not success:
+            if not message.startswith("Download cancelled"):
+                QMessageBox.critical(self, "Download Error", f"Failed to download: {url}\n\n{message}")
+            else:
+                self.statusBar().showMessage("Download cancelled")
+        
         # Move to next download
         self.current_download_index += 1
         
@@ -326,7 +333,23 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")  # Use Fusion style for a consistent look
     
-    window = YouTubeDownloaderUI()
-    window.show()
-    
-    sys.exit(app.exec())
+    try:
+        # Check if resources exist
+        icon_path = resource_path("FlanYDLogo.ico")
+        logo_path = resource_path("FlanYDLogo.png")
+        
+        if not os.path.exists(icon_path) or not os.path.exists(logo_path):
+            QMessageBox.warning(None, "Resource Warning", 
+                               f"Some resources could not be found:\n"
+                               f"{'Icon missing' if not os.path.exists(icon_path) else ''}\n"
+                               f"{'Logo missing' if not os.path.exists(logo_path) else ''}\n\n"
+                               f"The application will still run, but some visual elements may be missing.")
+        
+        window = YouTubeDownloaderUI()
+        window.show()
+        
+        sys.exit(app.exec())
+    except Exception as e:
+        QMessageBox.critical(None, "Startup Error", 
+                           f"An error occurred while starting the application:\n\n{str(e)}")
+        sys.exit(1)
