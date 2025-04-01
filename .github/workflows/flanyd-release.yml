@@ -17,7 +17,7 @@ jobs:
       - name: Build .exe using Docker
         run: |
           mkdir output
-          docker build -t flanyd-builder -f Dockerfile .
+          docker build -t flanyd-builder -f YoutubeDownloader/Dockerfile YoutubeDownloader
           docker run --rm -v ${{ github.workspace }}/output:/app/dist flanyd-builder
 
       - name: Upload Release Artifact
