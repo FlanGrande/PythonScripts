@@ -1,6 +1,3 @@
-
-*.png
-*.png
 *.tres
 *.mp3
 *.ogg
@@ -17,8 +14,6 @@
 *.pyz
 *.MP4
 *.exe
-*.spec
 *.psd
-*.ico
 *.webp
 *.gif
