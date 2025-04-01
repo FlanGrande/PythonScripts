@@ -15,3 +15,5 @@
 *.psd
 *.webp
 *.gif
+**/input/*
+**/output/*
