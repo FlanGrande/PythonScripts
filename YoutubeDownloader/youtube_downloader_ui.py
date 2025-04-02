@@ -34,7 +34,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.download_thread = None
         self.download_worker = None
         self.is_downloading = False
-        self.keep_video = True
+        self.keep_video = False
 
         # Set up the UI
         self.init_ui()

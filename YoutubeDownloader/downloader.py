@@ -38,7 +38,7 @@ class DownloadWorker(QObject):
         super().__init__()
         self.is_cancelled = False
     
-    def download_video(self, url, selected_format="mp4", keep_video=True):
+    def download_video(self, url, selected_format="mp4", keep_video=False):
         """Download a YouTube video and emit progress signals."""
         try:
             # Clean the URL to remove unnecessary parameters
