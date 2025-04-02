@@ -25,8 +25,8 @@ jobs:
       - name: Upload Release Artifact
         uses: softprops/action-gh-release@v1
         with:
-          files:
-            - dist/FlanYD.exe
-            - dist/FlanYD
+          files: |
+            dist/FlanYD.exe
+            dist/FlanYD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
