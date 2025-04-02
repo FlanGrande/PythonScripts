@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import sys
 import os
-import platform
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QListWidget, QListWidgetItem,
-    QProgressBar, QMessageBox, QFrame, QSizePolicy
+    QLabel, QLineEdit, QPushButton, QListWidget,
+    QProgressBar, QMessageBox, QFrame
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSlot
 from PyQt6.QtGui import QIcon, QFont, QPixmap

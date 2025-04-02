@@ -1,6 +1,3 @@
-import os
-import sys
-import re
 from urllib.parse import urlparse, parse_qs
 from PyQt6.QtCore import QObject, pyqtSignal
 from PyQt6.QtWidgets import QApplication

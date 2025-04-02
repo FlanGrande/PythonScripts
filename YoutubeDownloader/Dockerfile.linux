@@ -1,0 +1,31 @@
+FROM python:3.13
+
+# Install required Python packages
+RUN pip install pyqt6 yt-dlp pyinstaller
+
+# Download and extract ffmpeg for Linux
+RUN apt-get update && apt-get install -y wget && \
+    wget -q https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz -O /tmp/ffmpeg.tar.xz && \
+    tar -xJf /tmp/ffmpeg.tar.xz -C /tmp && \
+    mkdir -p /app/ffmpeg && \
+    cp /tmp/ffmpeg-master-latest-linux64-gpl/bin/ffmpeg /app/ffmpeg/ && \
+    cp /tmp/ffmpeg-master-latest-linux64-gpl/bin/ffprobe /app/ffmpeg/ && \
+    rm -rf /tmp/ffmpeg.tar.xz /tmp/ffmpeg-master-latest-linux64-gpl
+
+# Copy your Python script and related files into /app.
+WORKDIR /app
+
+# Copy application files
+COPY main.py downloader.py youtube_downloader_ui.py /app/
+
+# Copy the branding assets
+COPY FlanYDLogo.ico FlanYDLogo.png /app/
+
+# Copy the PyInstaller spec file
+COPY FlanYD.spec /app/
+
+# If you have a requirements.txt with necessary libraries (e.g., PyQt5, etc.), copy and install it:
+# COPY requirements.txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+
+CMD pyinstaller FlanYD.spec

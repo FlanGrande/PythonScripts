@@ -1,10 +1,22 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+
+# Define the ffmpeg variable based on the operating system
+if sys.platform == 'win32':
+    ffmpeg = 'ffmpeg.exe'
+    ffprobe = 'ffprobe.exe'
+else:
+    ffmpeg = 'ffmpeg'
+    ffprobe = 'ffprobe'
+
 block_cipher = None
+
+
 
 a = Analysis(['youtube_downloader_ui.py'],
              pathex=[],
-             binaries=[('/app/ffmpeg/ffmpeg.exe', '.'), ('/app/ffmpeg/ffprobe.exe', '.')],
+             binaries=[(f'/app/ffmpeg/{ffmpeg}', '.'), (f'/app/ffmpeg/{ffprobe}', '.')],
              datas=[('FlanYDLogo.png', '.'), ('FlanYDLogo.ico', '.')],
              hiddenimports=[],
              hookspath=[],
