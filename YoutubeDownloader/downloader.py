@@ -38,18 +38,42 @@ class DownloadWorker(QObject):
         super().__init__()
         self.is_cancelled = False
     
-    def download_video(self, url):
+    def download_video(self, url, selected_format="mp4"):
         """Download a YouTube video and emit progress signals."""
         try:
             # Clean the URL to remove unnecessary parameters
             clean_url = clean_youtube_url(url)
             
-            ydl_opts = {
-                'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]',
-                'outtmpl': '%(title)s.%(ext)s',
-                'progress_hooks': [self._progress_hook],
-                'quiet': True,  # Suppress console output
-            }
+            if selected_format in ["mp3", "ogg", "wav"]:
+                ydl_opts = {
+                    'format': 'bestaudio/best',
+                    'outtmpl': '%(title)s.%(ext)s',
+                    'progress_hooks': [self._progress_hook],
+                    'quiet': True,
+                    'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': selected_format,
+                        'preferredquality': '5',
+                    }],
+                }
+            elif selected_format in ["mp4", "webm"]:
+                ydl_opts = {
+                    'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]',
+                    'outtmpl': '%(title)s.%(ext)s',
+                    'progress_hooks': [self._progress_hook],
+                    'quiet': True,
+                    'postprocessors': [{
+                        'key': 'FFmpegVideoConvertor',
+                        'preferredformat': selected_format,
+                    }],
+                }
+            else:
+                ydl_opts = {
+                    'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]',
+                    'outtmpl': '%(title)s.%(ext)s',
+                    'progress_hooks': [self._progress_hook],
+                    'quiet': True,
+                }
             
             # First get info to have the title before download starts
             with YoutubeDL(ydl_opts) as ydl:

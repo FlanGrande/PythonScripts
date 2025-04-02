@@ -3,7 +3,7 @@ import sys
 import os
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QListWidget,
+    QLabel, QLineEdit, QPushButton, QListWidget, QComboBox,
     QProgressBar, QMessageBox, QFrame
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSlot
@@ -136,6 +136,14 @@ class YouTubeDownloaderUI(QMainWindow):
         self.cancel_button.setMinimumHeight(40)
         
         controls_layout.addWidget(self.download_button)
+        
+        format_label = QLabel("Format:")
+        controls_layout.addWidget(format_label)
+        self.format_dropdown = QComboBox()
+        self.format_dropdown.addItems(["mp4", "webm", "mp3", "ogg", "wav"])
+        self.format_dropdown.setCurrentText("mp4")
+        controls_layout.addWidget(self.format_dropdown)
+        
         controls_layout.addWidget(self.cancel_button)
         
         main_layout.addLayout(controls_layout)
@@ -260,7 +268,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.download_worker.moveToThread(self.download_thread)
         
         # Connect signals
-        self.download_thread.started.connect(lambda: self.download_worker.download_video(url))
+        self.download_thread.started.connect(lambda: self.download_worker.download_video(url, self.format_dropdown.currentText()))
         self.download_worker.progress_changed.connect(self.update_progress)
         self.download_worker.download_finished.connect(self.on_download_finished)
         
