@@ -14,15 +14,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build .exe using Docker
+      - name: Build binaries using Docker
         run: |
-          mkdir output
-          docker build -t flanyd-builder -f YoutubeDownloader/Dockerfile YoutubeDownloader
-          docker run --rm -v ${{ github.workspace }}/output:/app/dist flanyd-builder
+          mkdir dist
+          docker build -t flanyd-builder-windows -f YoutubeDownloader/Dockerfile.windows YoutubeDownloader
+          docker run --rm -v ${{ github.workspace }}/dist:/app/dist flanyd-builder-windows
+          docker build -t flanyd-builder-linux -f YoutubeDownloader/Dockerfile.linux YoutubeDownloader
+          docker run --rm -v ${{ github.workspace }}/dist:/app/dist flanyd-builder-linux
 
       - name: Upload Release Artifact
         uses: softprops/action-gh-release@v1
         with:
-          files: output/FlanYD.exe
+          files:
+            - dist/FlanYD.exe
+            - dist/FlanYD
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
