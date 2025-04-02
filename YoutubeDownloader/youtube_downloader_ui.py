@@ -56,6 +56,7 @@ class YouTubeDownloaderUI(QMainWindow):
         logo_pixmap = logo_pixmap.scaled(48, 48, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setFixedSize(48, 48)
+        logo_label.setToolTip("FlanYD - YouTube Video Downloader by FlanGran.de")
         
         # Title
         title_label = QLabel("FlanYD")
@@ -81,11 +82,13 @@ class YouTubeDownloaderUI(QMainWindow):
         url_label = QLabel("URL:")
         self.url_input = QLineEdit()
         self.url_input.setPlaceholderText("Enter YouTube URL...")
+        self.url_input.setToolTip("Enter a valid YouTube URL.")
         self.url_input.returnPressed.connect(self.add_url)
         
         add_button = QPushButton("+")
         add_button.setFixedSize(30, 30)
         add_button.clicked.connect(self.add_url)
+        add_button.setToolTip("Add URL to the list")
         
         url_layout.addWidget(url_label)
         url_layout.addWidget(self.url_input, 1)
@@ -107,9 +110,11 @@ class YouTubeDownloaderUI(QMainWindow):
         list_buttons_layout = QHBoxLayout()
         
         self.remove_button = QPushButton("Remove Selected")
+        self.remove_button.setToolTip("Remove the selected URL from the list")
         self.remove_button.clicked.connect(self.remove_selected_url)
         
         self.clear_button = QPushButton("Clear All")
+        self.clear_button.setToolTip("Clear all added URLs")
         self.clear_button.clicked.connect(self.clear_url_list)
         
         list_buttons_layout.addWidget(self.remove_button)
@@ -119,6 +124,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.keep_video_checkbox = QCheckBox("Keep Video")
         self.keep_video_checkbox.setChecked(True)
         self.keep_video_checkbox.stateChanged.connect(self.set_keep_video)
+        self.keep_video_checkbox.setToolTip("Warning: If Keep Video is disabled, previously downloaded videos will be deleted when downloading the same content as MP3. For example, if you've already downloaded the 'Nyan Cat' video, and you download it again as MP3 with Keep Video unchecked, the existing video file will be removed.")
         list_buttons_layout.addWidget(self.keep_video_checkbox)
         
         format_label = QLabel("Format:")
@@ -126,6 +132,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.format_dropdown = QComboBox()
         self.format_dropdown.addItems(["any", "mp4", "mp3", "wav"])
         self.format_dropdown.setCurrentText("any")
+        self.format_dropdown.setToolTip("Select the desired format for download.")
         list_buttons_layout.addWidget(self.format_dropdown)
         
         
@@ -141,10 +148,12 @@ class YouTubeDownloaderUI(QMainWindow):
         controls_layout = QHBoxLayout()
         
         self.download_button = QPushButton("Download All")
+        self.download_button.setToolTip("Download all added URLs")
         self.download_button.clicked.connect(self.start_download)
         self.download_button.setMinimumHeight(40)
         
         self.cancel_button = QPushButton("Cancel")
+        self.cancel_button.setToolTip("Cancel the ongoing download process")
         self.cancel_button.clicked.connect(self.cancel_download)
         self.cancel_button.setEnabled(False)
         self.cancel_button.setMinimumHeight(40)
