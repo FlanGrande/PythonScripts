@@ -17,3 +17,4 @@
 *.gif
 **/input/*
 **/output/*
+dist/
