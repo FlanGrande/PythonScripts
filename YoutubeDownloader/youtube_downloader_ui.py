@@ -3,7 +3,7 @@ import sys
 import os
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QLineEdit, QPushButton, QListWidget, QComboBox,
+    QLabel, QLineEdit, QPushButton, QListWidget, QComboBox, QCheckBox,
     QProgressBar, QMessageBox, QFrame
 )
 from PyQt6.QtCore import Qt, QThread, pyqtSlot
@@ -34,7 +34,8 @@ class YouTubeDownloaderUI(QMainWindow):
         self.download_thread = None
         self.download_worker = None
         self.is_downloading = False
-        
+        self.keep_video = True
+
         # Set up the UI
         self.init_ui()
     
@@ -114,6 +115,19 @@ class YouTubeDownloaderUI(QMainWindow):
         list_buttons_layout.addWidget(self.remove_button)
         list_buttons_layout.addWidget(self.clear_button)
         list_buttons_layout.addStretch()
+
+        self.keep_video_checkbox = QCheckBox("Keep Video")
+        self.keep_video_checkbox.setChecked(True)
+        self.keep_video_checkbox.stateChanged.connect(self.set_keep_video)
+        list_buttons_layout.addWidget(self.keep_video_checkbox)
+        
+        format_label = QLabel("Format:")
+        list_buttons_layout.addWidget(format_label)
+        self.format_dropdown = QComboBox()
+        self.format_dropdown.addItems(["any", "mp4", "mp3", "wav"])
+        self.format_dropdown.setCurrentText("any")
+        list_buttons_layout.addWidget(self.format_dropdown)
+        
         
         main_layout.addLayout(list_buttons_layout)
         
@@ -136,14 +150,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.cancel_button.setMinimumHeight(40)
         
         controls_layout.addWidget(self.download_button)
-        
-        format_label = QLabel("Format:")
-        controls_layout.addWidget(format_label)
-        self.format_dropdown = QComboBox()
-        self.format_dropdown.addItems(["mp4", "webm", "mp3", "ogg", "wav"])
-        self.format_dropdown.setCurrentText("mp4")
-        controls_layout.addWidget(self.format_dropdown)
-        
+       
         controls_layout.addWidget(self.cancel_button)
         
         main_layout.addLayout(controls_layout)
@@ -233,6 +240,9 @@ class YouTubeDownloaderUI(QMainWindow):
         self.cancel_button.setEnabled(self.is_downloading)
         self.url_input.setEnabled(not self.is_downloading)
     
+    def set_keep_video(self, state):
+        self.keep_video = state == Qt.CheckState.Checked
+    
     def start_download(self):
         if not self.url_list:
             return
@@ -268,7 +278,7 @@ class YouTubeDownloaderUI(QMainWindow):
         self.download_worker.moveToThread(self.download_thread)
         
         # Connect signals
-        self.download_thread.started.connect(lambda: self.download_worker.download_video(url, self.format_dropdown.currentText()))
+        self.download_thread.started.connect(lambda: self.download_worker.download_video(url, self.format_dropdown.currentText(), self.keep_video))
         self.download_worker.progress_changed.connect(self.update_progress)
         self.download_worker.download_finished.connect(self.on_download_finished)
         

@@ -38,42 +38,40 @@ class DownloadWorker(QObject):
         super().__init__()
         self.is_cancelled = False
     
-    def download_video(self, url, selected_format="mp4"):
+    def download_video(self, url, selected_format="mp4", keep_video=True):
         """Download a YouTube video and emit progress signals."""
         try:
             # Clean the URL to remove unnecessary parameters
             clean_url = clean_youtube_url(url)
             
-            if selected_format in ["mp3", "ogg", "wav"]:
+            if selected_format in ["mp3", "wav"]:
                 ydl_opts = {
                     'format': 'bestaudio/best',
-                    'outtmpl': '%(title)s.%(ext)s',
-                    'progress_hooks': [self._progress_hook],
-                    'quiet': True,
                     'postprocessors': [{
                         'key': 'FFmpegExtractAudio',
                         'preferredcodec': selected_format,
                         'preferredquality': '5',
                     }],
                 }
-            elif selected_format in ["mp4", "webm"]:
+            elif selected_format in ["mp4"]:
                 ydl_opts = {
                     'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]',
-                    'outtmpl': '%(title)s.%(ext)s',
-                    'progress_hooks': [self._progress_hook],
-                    'quiet': True,
                     'postprocessors': [{
                         'key': 'FFmpegVideoConvertor',
-                        'preferredformat': selected_format,
+                        'preferedformat': selected_format,
                     }],
                 }
             else:
                 ydl_opts = {
-                    'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]',
-                    'outtmpl': '%(title)s.%(ext)s',
-                    'progress_hooks': [self._progress_hook],
-                    'quiet': True,
+                    'format': 'bestvideo[height<=1081]+bestaudio/best[height<=1080]'
                 }
+            
+            # Common options
+            ydl_opts['outtmpl'] = 'downloads/%(title)s.%(ext)s'
+            ydl_opts['progress_hooks'] = [self._progress_hook]
+            ydl_opts['quiet'] = True
+            ydl_opts['windowsfilenames'] = True
+            ydl_opts['keepvideo'] = keep_video
             
             # First get info to have the title before download starts
             with YoutubeDL(ydl_opts) as ydl:
