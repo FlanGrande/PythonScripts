@@ -1,5 +1,8 @@
 {
     "on_soundfx_path": "/usr/share/sounds/freedesktop/stereo/phone-outgoing-busy.oga",
     "off_soundfx_path": "/usr/share/sounds/freedesktop/stereo/phone-outgoing-busy.oga",
-    "end_soundfx_path": "/usr/share/sounds/freedesktop/stereo/phone-outgoing-busy.oga"
+    "end_soundfx_path": "/usr/share/sounds/freedesktop/stereo/phone-outgoing-busy.oga",
+    "on_duration": 1200,
+    "off_duration": 1200,
+    "cycles": 0
 }
