@@ -4,9 +4,9 @@ import json
 import subprocess
 from PyQt6.QtWidgets import (QApplication, QSystemTrayIcon, QMenu, 
                              QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
-                             QSpinBox, QPushButton, QMessageBox)
-from PyQt6.QtCore import QTimer, pyqtSignal
-from PyQt6.QtGui import QIcon, QAction
+                             QSpinBox, QPushButton, QMessageBox, QWidget)
+from PyQt6.QtCore import QTimer, pyqtSignal, Qt
+from PyQt6.QtGui import QIcon, QAction, QCursor
 import classes.config as config
 
 class SettingsDialog(QDialog):
@@ -51,6 +51,7 @@ class SettingsDialog(QDialog):
         layout.addLayout(button_layout)
         
         self.setLayout(layout)
+        self.center_on_screen()
         self.load_settings()
     
     def load_settings(self):
@@ -69,6 +70,20 @@ class SettingsDialog(QDialog):
             'off_duration': self.off_duration_spin.value() * 60,
             'cycles': self.cycles_spin.value()
         }
+    
+    def center_on_screen(self):
+        # Get the screen where the cursor currently is
+        screen = QApplication.screenAt(QCursor.pos())
+        if not screen:
+            screen = QApplication.primaryScreen()
+        
+        screen_geometry = screen.availableGeometry()
+        dialog_geometry = self.frameGeometry()
+        
+        center_point = screen_geometry.center()
+        dialog_geometry.moveCenter(center_point)
+        self.move(dialog_geometry.topLeft())
+
 
 class AlarmTrayApp(QApplication):
     def __init__(self, argv):
@@ -127,14 +142,14 @@ class AlarmTrayApp(QApplication):
     
     def update_tray_icon(self):
         if self.is_running:
-            icon_path = "green_icon.png"
+            icon_path = "alarming_cycle_icon_on.png"
             tooltip = f"Alarm Running - Cycle {self.current_cycle}"
             if self.is_on_phase:
                 tooltip += " (ON)"
             else:
                 tooltip += " (OFF)"
         else:
-            icon_path = "red_icon.png"
+            icon_path = "alarming_cycle_icon_off.png"
             tooltip = "Alarm Stopped"
         
         if os.path.exists(icon_path):
@@ -199,7 +214,11 @@ class AlarmTrayApp(QApplication):
                            stderr=subprocess.DEVNULL)
     
     def show_settings(self):
-        dialog = SettingsDialog()
+        self.dummy_parent = QWidget()
+        self.dummy_parent.setWindowFlags(Qt.WindowType.Tool)  # Optional: hides it from the taskbar
+        self.dummy_parent.hide()
+        dialog = SettingsDialog(parent=self.dummy_parent)
+        dialog.setWindowModality(Qt.WindowModality.ApplicationModal)
         if dialog.exec() == QDialog.DialogCode.Accepted:
             settings = dialog.get_settings()
             self.on_duration = settings['on_duration']
