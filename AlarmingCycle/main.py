@@ -96,7 +96,7 @@ class AlarmTrayApp(QApplication):
         self.is_running = False
         self.current_cycle = 0
         self.total_cycles = 0
-        self.is_on_phase = True
+        self.is_on_phase = False
         self.on_duration = 1200
         self.off_duration = 1200
         
@@ -142,14 +142,15 @@ class AlarmTrayApp(QApplication):
     
     def update_tray_icon(self):
         if self.is_running:
-            icon_path = "alarming_cycle_icon_on.png"
             tooltip = f"Alarm Running - Cycle {self.current_cycle}"
             if self.is_on_phase:
+                icon_path = "alarming_cycle_icon_on.png"
                 tooltip += " (ON)"
             else:
+                icon_path = "alarming_cycle_icon_off.png"
                 tooltip += " (OFF)"
         else:
-            icon_path = "alarming_cycle_icon_off.png"
+            icon_path = "alarming_cycle_icon.png"
             tooltip = "Alarm Stopped"
         
         if os.path.exists(icon_path):
@@ -165,7 +166,7 @@ class AlarmTrayApp(QApplication):
     def start_alarm(self):
         self.is_running = True
         self.current_cycle = 0
-        self.is_on_phase = True
+        self.is_on_phase = False
         self.start_stop_action.setText("Stop")
         
         self.next_cycle()
