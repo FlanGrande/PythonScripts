@@ -1,7 +1,7 @@
 import sys
 import os
 import json
-import subprocess
+import pygame
 from PyQt6.QtWidgets import (QApplication, QSystemTrayIcon, QMenu, 
                              QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
                              QSpinBox, QPushButton, QMessageBox, QWidget)
@@ -92,6 +92,9 @@ class AlarmTrayApp(QApplication):
         self.tray_icon = None
         self.timer = QTimer()
         self.timer.timeout.connect(self.timer_tick)
+        
+        # Initialize pygame mixer for audio playback
+        self.init_audio()
         
         self.is_running = False
         self.current_cycle = 0
@@ -208,11 +211,25 @@ class AlarmTrayApp(QApplication):
         self.play_sound_async(config.get_config_value("end_soundfx_path", ""))
         self.stop_alarm()
     
+    def init_audio(self):
+        """Initialize the pygame mixer. Sets a flag so audio playback can be skipped if init fails."""
+        try:
+            pygame.mixer.init()
+            self.audio_ready = True
+        except Exception as e:
+            print(f"Failed to initialize audio mixer: {e}")
+            self.audio_ready = False
+
     def play_sound_async(self, sound_path):
+        """Play a sound file asynchronously using pygame. Supports formats like .oga and .ogg."""
+        if not getattr(self, "audio_ready", False):
+            return
         if sound_path and os.path.exists(sound_path):
-            subprocess.Popen(['pw-play', sound_path], 
-                           stdout=subprocess.DEVNULL, 
-                           stderr=subprocess.DEVNULL)
+            try:
+                sound = pygame.mixer.Sound(sound_path)
+                sound.play()
+            except Exception as e:
+                print(f"Error playing sound '{sound_path}': {e}")
     
     def show_settings(self):
         self.dummy_parent = QWidget()
