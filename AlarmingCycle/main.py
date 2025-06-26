@@ -5,7 +5,7 @@ import pygame
 from PyQt6.QtWidgets import (QApplication, QSystemTrayIcon, QMenu, 
                              QDialog, QVBoxLayout, QHBoxLayout, QLabel, 
                              QSpinBox, QPushButton, QMessageBox, QWidget)
-from PyQt6.QtCore import QTimer, pyqtSignal, Qt
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QIcon, QAction, QCursor
 import classes.config as config
 
