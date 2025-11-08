@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.flanyd.FlanYD</id>
+  <name>FlanYD</name>
+  <summary>Download videos from YouTube and other platforms</summary>
+  
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  
+  <description>
+    <p>
+      FlanYD is a user-friendly YouTube downloader with a graphical interface.
+      It allows you to download videos and audio from YouTube and many other
+      video platforms.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Download videos in various qualities</li>
+      <li>Extract audio only</li>
+      <li>Batch download support</li>
+      <li>Built-in video conversion with FFmpeg</li>
+      <li>Simple and intuitive interface</li>
+    </ul>
+  </description>
+  
+  <launchable type="desktop-id">io.github.flanyd.FlanYD.desktop</launchable>
+  
+  <screenshots>
+    <screenshot type="default">
+      <caption>Main window</caption>
+      <image>https://example.com/screenshot1.png</image>
+    </screenshot>
+  </screenshots>
+  
+  <url type="homepage">https://github.com/yourusername/FlanYD</url>
+  <url type="bugtracker">https://github.com/yourusername/FlanYD/issues</url>
+  
+  <provides>
+    <binary>flanyd</binary>
+  </provides>
+  
+  <releases>
+    <release version="1.0.0" date="2024-11-08">
+      <description>
+        <p>Initial release</p>
+      </description>
+    </release>
+  </releases>
+  
+  <content_rating type="oars-1.1" />
+  
+  <developer_name>Your Name</developer_name>
+</component>

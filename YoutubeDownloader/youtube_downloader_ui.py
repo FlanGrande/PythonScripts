@@ -131,7 +131,7 @@ class YouTubeDownloaderUI(QMainWindow):
         list_buttons_layout.addWidget(format_label)
         self.format_dropdown = QComboBox()
         self.format_dropdown.addItems(["any", "mp4", "mp3", "wav"])
-        self.format_dropdown.setCurrentText("any")
+        self.format_dropdown.setCurrentText("mp3")
         self.format_dropdown.setToolTip("Select the desired format for download.")
         list_buttons_layout.addWidget(self.format_dropdown)
         

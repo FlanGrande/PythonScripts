@@ -1,0 +1,83 @@
+id: io.github.flanyd.FlanYD
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: flanyd
+
+# Permissions needed by the app
+finish-args:
+  # GUI access
+  - --socket=x11
+  - --socket=wayland
+  - --device=dri
+  # Network access for downloading
+  - --share=network
+  # File system access for saving videos
+  - --filesystem=xdg-download
+  - --filesystem=xdg-videos
+  - --filesystem=xdg-music
+  # For file chooser dialogs
+  - --talk-name=org.freedesktop.portal.FileChooser
+  # Audio/video codecs
+  - --env=GST_PLUGIN_PATH=/app/lib/gstreamer-1.0
+
+modules:
+  # Python 3 and pip
+  - name: python3
+    buildsystem: simple
+    build-commands:
+      - /usr/bin/python3 -m pip install --prefix=/app --no-deps .
+    sources:
+      - type: git
+        url: https://github.com/python/cpython.git
+        tag: v3.11.9
+
+  # PyQt6
+  - name: pyqt6
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app --no-deps PyQt6==6.7.0
+    sources:
+      - type: pypi
+        name: PyQt6
+
+  # yt-dlp
+  - name: yt-dlp
+    buildsystem: simple
+    build-commands:
+      - pip3 install --prefix=/app --no-deps yt-dlp
+    sources:
+      - type: pypi
+        name: yt-dlp
+
+  # FFmpeg (using pre-built static binaries)
+  - name: ffmpeg
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 ffmpeg /app/bin/ffmpeg
+      - install -Dm755 ffprobe /app/bin/ffprobe
+    sources:
+      - type: archive
+        url: https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
+        strip-components: 1
+        only-paths:
+          - bin/ffmpeg
+          - bin/ffprobe
+
+  # Your application
+  - name: flanyd
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 youtube_downloader_ui.py /app/bin/flanyd
+      - install -Dm755 main.py /app/lib/python3.11/site-packages/flanyd/main.py
+      - install -Dm755 downloader.py /app/lib/python3.11/site-packages/flanyd/downloader.py
+      - install -Dm644 FlanYDLogo.png /app/share/icons/hicolor/256x256/apps/io.github.flanyd.FlanYD.png
+      - install -Dm644 io.github.flanyd.FlanYD.desktop /app/share/applications/io.github.flanyd.FlanYD.desktop
+      - install -Dm644 io.github.flanyd.FlanYD.metainfo.xml /app/share/metainfo/io.github.flanyd.FlanYD.metainfo.xml
+    sources:
+      - type: dir
+        path: .
+      - type: file
+        path: io.github.flanyd.FlanYD.desktop
+      - type: file
+        path: io.github.flanyd.FlanYD.metainfo.xml

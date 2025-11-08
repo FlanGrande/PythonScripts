@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=FlanYD
+Comment=YouTube Video Downloader
+Icon=io.github.flanyd.FlanYD
+Exec=flanyd
+Terminal=false
+Categories=Network;AudioVideo;Video;
+Keywords=youtube;download;video;audio;yt-dlp;
